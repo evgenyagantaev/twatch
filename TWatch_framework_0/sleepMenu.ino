@@ -1,11 +1,6 @@
 
 
 
-
-
-
-
-
 const int max_sleep_menu_items = 3; // number of items
 String sleep_menu_itemName[max_sleep_menu_items] = {"Sleep", "Wake up", "Back"}; // items names
 
@@ -47,7 +42,7 @@ uint8_t sleep_menu()
                 { 
                     exitMenu = true;
                     snprintf(message, 128, "%04d.%02d.%02d %02d:%02d org wak\r\n", yyear, mmonth, dday, hh, mm);
-                    //appendFile(SPIFFS, "/journal.txt", message);
+                    appendFile(SPIFFS, "/journal.txt", message);
                 }
           
                 
@@ -55,7 +50,7 @@ uint8_t sleep_menu()
                 { 
                     exitMenu = true;
                     snprintf(message, 128, "%04d.%02d.%02d %02d:%02d org slp\r\n", yyear, mmonth, dday, hh, mm);
-                    //appendFile(SPIFFS, "/journal.txt", message);
+                    appendFile(SPIFFS, "/journal.txt", message);
                     // reset step counter
                     // reset push counter
                     // reset pull counter

@@ -1,17 +1,19 @@
-// Step control application menu
 
 
-const int max_push_menu_items = 3; // number of items
-String push_menu_itemName[max_push_menu_items] = {"Add", "Reset", "Back"}; // items names
 
-uint8_t push_menu() 
+const int max_job_menu_items = 5; // number of items
+String job_menu_itemName[max_job_menu_items] = {"Vihr", "E spusk", "T-watch", "Idle", "Back"}; // items names
+
+uint8_t job_menu() 
 {
+    int maxApp = max_job_menu_items;
+  
     int mSelect = 0; // The currently highlighted app
     int16_t x, y, tx, ty;
   
     boolean exitMenu = false; // used to stay in the menu until user selects app
   
-    push_menu_display(0); // display the list of Apps
+    job_menu_display(0); // display the list of Apps
   
     while (!exitMenu) 
     {
@@ -20,27 +22,22 @@ uint8_t push_menu()
     
           while (ttgo->getTouch(tx, ty)) {} // wait until you stop touching
     
-          if (y >= 160) // bottom selected
+          if (y >= 160) // you want the menu list shifted up
           { 
-              exitMenu = true;
-              // reset push counter
-              preferences.begin("twatch", false);
-              preferences.putUInt("push", 0);
-              preferences.end();
+              mSelect += 1;
+              if (mSelect == maxApp) mSelect = 0;
+              job_menu_display(mSelect);
           }
     
-          if (y <= 80) // top selected
+          if (y <= 80) // you want the menu list shifted down
           { 
-              exitMenu = true;
+              mSelect -= 1;
+              if (mSelect < 0) mSelect = maxApp - 1;
+              job_menu_display(mSelect);
           }
-          if (y > 80 && y < 160) // You selected the middle (add)
+          if (y > 80 && y < 160) // You selected the middle
           { 
               exitMenu = true;
-              preferences.begin("twatch", false);
-              uint32_t push_summ = preferences.getUInt("push", 0);
-              push_summ += (uint32_t)(appSetNumber());
-              preferences.putUInt("push", push_summ);
-              preferences.end();
           }
         }
     }
@@ -49,7 +46,7 @@ uint8_t push_menu()
     return mSelect;
 }
 
-void push_menu_display(int mSel) 
+void job_menu_display(int mSel) 
 {
 
     int curSel = 0;
@@ -58,24 +55,24 @@ void push_menu_display(int mSel)
     ttgo->tft->fillRect(0, 80, 239, 80, TFT_BLACK);
   
     // Display apps
-    if (mSel == 0) curSel = maxItems - 1;
+    if (mSel == 0) curSel = max_job_menu_items - 1;
     else curSel = mSel - 1;
   
     ttgo->tft->setTextSize(2);
     ttgo->tft->setTextColor(TFT_GREEN);
     ttgo->tft->setCursor(50, 30);
-    ttgo->tft->println(push_menu_itemName[curSel]);
+    ttgo->tft->println(job_menu_itemName[curSel]);
   
     ttgo->tft->setTextSize(3);
     ttgo->tft->setTextColor(TFT_RED);
     ttgo->tft->setCursor(40, 110);
-    ttgo->tft->println(push_menu_itemName[mSel]);
+    ttgo->tft->println(job_menu_itemName[mSel]);
   
-    if (mSel == maxItems - 1) curSel = 0;
+    if (mSel == max_job_menu_items - 1) curSel = 0;
     else curSel = mSel + 1;
   
     ttgo->tft->setTextSize(2);
     ttgo->tft->setTextColor(TFT_GREEN);
     ttgo->tft->setCursor(50, 190);
-    ttgo->tft->print(push_menu_itemName[curSel]);
+    ttgo->tft->print(job_menu_itemName[curSel]);
 }

@@ -38,9 +38,24 @@ uint8_t pull_menu()
               exitMenu = true;
               preferences.begin("twatch", false);
               uint32_t pull_summ = preferences.getUInt("pull", 0);
-              pull_summ += (uint32_t)(appSetNumber());
+              int new_pull = (uint32_t)(appSetNumber());
+              pull_summ += new_pull;
               preferences.putUInt("pull", pull_summ);
               preferences.end();
+              // write in journal
+              // read current time-date
+              RTC_Date tnow = ttgo->rtc->getDateTime();
+              hh = tnow.hour;
+              mm = tnow.minute;
+              ss = tnow.second;
+              dday = tnow.day;
+              mmonth = tnow.month;
+              yyear = tnow.year;
+            
+              char message[128];
+            
+              snprintf(message, 128, "%04d.%02d.%02d %02d:%02d fit pul %d\r\n", yyear, mmonth, dday, hh, mm, new_pull);
+              appendFile(SPIFFS, "/journal.txt", message);
           }
         }
     }
