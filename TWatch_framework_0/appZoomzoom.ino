@@ -21,7 +21,7 @@ void zoomzoom()
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
@@ -39,15 +39,15 @@ void zoomzoom()
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
@@ -65,11 +65,11 @@ void zoomzoom()
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
@@ -87,15 +87,15 @@ void zoomzoom()
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
-        delay(110);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(70); // "."
         digitalWrite(4, LOW);
