@@ -29,6 +29,7 @@ void zoomzoom()
         digitalWrite(4, HIGH);
         delay(210); // "-"
         digitalWrite(4, LOW);
+        delay(210);
         digitalWrite(4, HIGH);
         delay(20); // "."
         digitalWrite(4, LOW);
