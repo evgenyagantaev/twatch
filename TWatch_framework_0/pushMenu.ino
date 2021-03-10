@@ -57,7 +57,9 @@ uint8_t push_menu()
             
               snprintf(message, 128, "%04d.%02d.%02d %02d:%02d fit psh %d\r\n", yyear, mmonth, dday, hh, mm, new_push);
               appendFile(SPIFFS, "/journal.txt", message);
-              
+              //**********************************************************************
+              snprintf(diagnostics, sizeof(diagnostics), "jrnl: fit psh %d                ", new_push);
+              //**********************************************************************
           }
         }
     }

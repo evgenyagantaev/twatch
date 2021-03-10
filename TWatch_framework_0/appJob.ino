@@ -35,10 +35,17 @@ void appJob()
         if(job_selected == (max_job_menu_items - 2))  // idle item
         {
             snprintf(message, 128, "%04d.%02d.%02d %02d:%02d byt idle\r\n", yyear, mmonth, dday, hh, mm);
+            //**********************************************************************
+            snprintf(diagnostics, sizeof(diagnostics), "jrnl: byt idle                ");
+            //**********************************************************************
         }
         else
         {
             snprintf(message, 128, "%04d.%02d.%02d %02d:%02d job %s\r\n", yyear, mmonth, dday, hh, mm, job_menu_itemName[job_selected]);
+            //**********************************************************************
+            snprintf(diagnostics, sizeof(diagnostics), "jrnl: job %s                ", job_menu_itemName[job_selected]);
+            //**********************************************************************
+
         }
         
         appendFile(SPIFFS, "/journal.txt", message);

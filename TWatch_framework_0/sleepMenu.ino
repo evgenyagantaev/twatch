@@ -43,6 +43,9 @@ uint8_t sleep_menu()
                     exitMenu = true;
                     snprintf(message, 128, "%04d.%02d.%02d %02d:%02d org wak\r\n", yyear, mmonth, dday, hh, mm);
                     appendFile(SPIFFS, "/journal.txt", message);
+                    //**********************************************************************
+                    snprintf(diagnostics, sizeof(diagnostics), "jrnl: org wak                ");
+                    //**********************************************************************
                 }
           
                 
@@ -51,6 +54,9 @@ uint8_t sleep_menu()
                     exitMenu = true;
                     snprintf(message, 128, "%04d.%02d.%02d %02d:%02d org slp\r\n", yyear, mmonth, dday, hh, mm);
                     appendFile(SPIFFS, "/journal.txt", message);
+                    //**********************************************************************
+                    snprintf(diagnostics, sizeof(diagnostics), "jrnl: org slp                ");
+                    //**********************************************************************
                     // reset step counter
                     // reset push counter
                     // reset pull counter

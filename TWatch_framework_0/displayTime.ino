@@ -28,4 +28,8 @@ void displayTime()
     ttgo->tft->drawString(buf, 0, 170, 4);
     snprintf(buf, 128, "Pll: %2d Psh: %2d            ", current_pull, current_push);
     ttgo->tft->drawString(buf, 0, 194, 4);
+    //**********************************************************************
+    ttgo->tft->setTextColor(TFT_YELLOW, TFT_BLACK);
+    ttgo->tft->drawString(diagnostics, 0, 218, 4);
+    //**********************************************************************
 }

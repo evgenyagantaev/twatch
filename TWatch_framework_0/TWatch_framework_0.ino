@@ -12,6 +12,8 @@
 
 #define FORMAT_SPIFFS_IF_FAILED true
 
+char diagnostics[64];
+
 TTGOClass *ttgo;
 Preferences preferences;
 
@@ -43,6 +45,7 @@ int step_counter_initial = 0;
 unsigned int step_save = 0;
 int step_started = 0;
 int no_step_counter = 0;
+int step_counter = 0;
 unsigned int weight_factor_10 = 0;
 float current_weight = 0;
 int current_pull = 0;
@@ -147,7 +150,35 @@ void setup()
 
     //************************************* POWER ************************************************
     power = ttgo->power;
+    pinMode(AXP202_INT, INPUT);
+    attachInterrupt(AXP202_INT, [] {power_irq = true;}, FALLING);
+    // ADC monitoring must be enabled to use the AXP202 monitoring function
+    power->adc1Enable(AXP202_VBUS_VOL_ADC1
+                      | AXP202_VBUS_CUR_ADC1
+                      | AXP202_BATT_CUR_ADC1
+                      | AXP202_BATT_VOL_ADC1,
+                      true);
+    power->enableIRQ(AXP202_PEK_SHORTPRESS_IRQ
+                     | AXP202_VBUS_REMOVED_IRQ
+                     | AXP202_VBUS_CONNECT_IRQ
+                     | AXP202_CHARGING_IRQ, true
+                    );
+    power->clearIRQ();
+
+    // Use ext0 for external wakeup
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)AXP202_INT, LOW);
     //************************************* power ************************************************
+
+    //*********************************** POWER BUTTON *******************************
+    pinMode(AXP202_INT, INPUT_PULLUP);
+    attachInterrupt(AXP202_INT, [] {power_button_irq = true;}, FALLING);
+    // Must be enabled first, and then clear the interrupt status,
+    // otherwise abnormal
+    power->enableIRQ(AXP202_PEK_SHORTPRESS_IRQ,
+                     true);
+    //  Clear interrupt status
+    power->clearIRQ();
+    //*********************************** power button *******************************
 
     //********************************* STEP COUNTER *********************************************
     step_counter_initial = step_save;
@@ -200,6 +231,10 @@ void setup()
     pinMode(4, OUTPUT); 
     //******************************** motor *******************************
 
+    //**********************************************************************
+    snprintf(diagnostics, sizeof(diagnostics), "jrnl: reset                ");
+    //**********************************************************************
+
 }
 
 void loop() 
@@ -230,7 +265,7 @@ void loop()
         //*******************************
 
         no_step_counter++;
-        if((step_started == 1) && (no_step_counter > 180))
+        if((step_started == 1) && (no_step_counter > 60))
         {
             step_started = 0;
 
@@ -247,7 +282,14 @@ void loop()
         
             snprintf(message, 128, "%04d.%02d.%02d %02d:%02d stp fin\r\n", yyear, mmonth, dday, hh, mm);
             appendFile(SPIFFS, "/journal.txt", message);
+
+            //**********************************************************************
+            snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp fin                ");
+            //**********************************************************************
         }
+
+        if((no_step_counter > 3) && (step_counter > 0))
+            step_counter = 0;
     }
 
     int16_t x, y;
@@ -299,7 +341,8 @@ void loop()
     {
         step_irq = 0;
         bool  rlst = false;
-        do {
+        do 
+        {
             // Read the BMA423 interrupt status,
             // need to wait for it to return to true before continuing
             rlst =  sensor->readInterrupt();
@@ -308,7 +351,6 @@ void loop()
         // Check if it is a step interrupt
         if (sensor->isStepCounter()) 
         {
-            no_step_counter = 0;
           
             // Get step data from register
             uint32_t step = sensor->getCounter();
@@ -317,7 +359,9 @@ void loop()
             preferences.putUInt("step_save", step_save);
             preferences.end();
 
-            if(step_started == 0)
+            no_step_counter = 0;
+            step_counter++;
+            if((step_started == 0) && (step_counter > 3))
             {
                 step_started = 1;
 
@@ -334,6 +378,10 @@ void loop()
             
                 snprintf(message, 128, "%04d.%02d.%02d %02d:%02d stp sta\r\n", yyear, mmonth, dday, hh, mm);
                 appendFile(SPIFFS, "/journal.txt", message);
+
+                //**********************************************************************
+                snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp sta                ");
+                //**********************************************************************
             }
         }
 
@@ -342,15 +390,15 @@ void loop()
             if(display_on)
             {
                 // turn off display
-                //power->setPowerOutPut(AXP202_LDO2, false);
-                ttgo->closeBL();
+                power->setPowerOutPut(AXP202_LDO2, false);
+                //ttgo->closeBL();
                 display_on = false;
             }
             else
             {
                 // turn on display
-                //power->setPowerOutPut(AXP202_LDO2, true);
-                ttgo->openBL();
+                power->setPowerOutPut(AXP202_LDO2, true);
+                //ttgo->openBL();
                 display_on = true;
             }
         }
@@ -374,6 +422,35 @@ void loop()
     }
     //*********************************** step irq ******************************************
 
+
+    //******************************* POWER BUTTON IRQ ******************************************
+    if (power_button_irq) 
+    {
+        power_button_irq = false;
+        ttgo->power->readIRQ();
+        if (ttgo->power->isPEKShortPressIRQ()) 
+        {
+            ttgo->power->clearIRQ();
+            if(display_on)
+            {
+                // turn off display
+                //power->setPowerOutPut(AXP202_LDO2, false);
+    
+                // enter deep sleep mode
+                display_on = false;
+                esp_deep_sleep_start();
+                
+            }
+            else
+            {
+                // turn on display
+                //power->setPowerOutPut(AXP202_LDO2, true);
+                ttgo->openBL();
+                display_on = true;
+            }
+        }
+    }
+    //******************************* power button irq ******************************************
     
 }
 //**********************************************************************************************
