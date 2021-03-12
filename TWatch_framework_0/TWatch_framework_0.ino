@@ -320,15 +320,18 @@ void loop()
               appSetTime();
               break;
             case 5:
-              pull_menu();
+              appGraph();
               break;
             case 6:
-              push_menu();
+              pull_menu();
               break;
             case 7:
-              journal_menu();
+              push_menu();
               break;
             case 8:
+              journal_menu();
+              break;
+            case 9:
               sleep_menu();
               break;
         }
@@ -380,7 +383,7 @@ void loop()
                 appendFile(SPIFFS, "/journal.txt", message);
 
                 //**********************************************************************
-                snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp sta                ");
+                snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp sta");
                 //**********************************************************************
             }
         }
@@ -400,6 +403,9 @@ void loop()
                 power->setPowerOutPut(AXP202_LDO2, true);
                 //ttgo->openBL();
                 display_on = true;
+                //**********************************************************************
+                snprintf(diagnostics, sizeof(diagnostics), "dsp on: dbl clck                ");
+                //**********************************************************************
             }
         }
 
