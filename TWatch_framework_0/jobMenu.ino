@@ -1,8 +1,7 @@
 
 
-
-const int max_job_menu_items = 5; // number of items
-String job_menu_itemName[max_job_menu_items] = {"Vihr", "E spusk", "T-watch", "Idle", "Back"}; // items names
+const int max_job_menu_items = 7; // number of items
+String job_menu_itemName[max_job_menu_items] = {"Vihr", "E spusk", "T-watch", "Texts", "Face-id", "Idle", "Back"}; // items names
 
 uint8_t job_menu() 
 {

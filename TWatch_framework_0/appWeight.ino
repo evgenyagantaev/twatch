@@ -14,7 +14,7 @@ void appWeight()
     snprintf(buf, sizeof(buf), "weight = %5.1f", weight);
     ttgo->tft->drawString(buf, 5, 5, 4);
 
-    if(weight != 0.0)
+    if((int)weight != 0)
     {
         preferences.begin("twatch", false);
         preferences.putUInt("weight", (uint32_t)(weight*10));

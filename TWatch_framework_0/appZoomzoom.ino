@@ -19,19 +19,19 @@ void zoomzoom()
         seconds_counter = 0;
         // f ..-.
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(210); // "-"
+        delay(400); // "-"
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
     }
     else if((mm == 30) && (qarter2 == 0))
@@ -44,19 +44,19 @@ void zoomzoom()
         seconds_counter = 0;
         // b -...
         digitalWrite(4, HIGH);
-        delay(210); // "-"
+        delay(400); // "-"
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
         
     }
@@ -71,19 +71,19 @@ void zoomzoom()
         // c -.-.
         
         digitalWrite(4, HIGH);
-        delay(210); // "-"
+        delay(400); // "-"
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(210); // "-"
+        delay(400); // "-"
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
     }
     else if((mm == 0) && (qarter4 == 0))
@@ -96,19 +96,19 @@ void zoomzoom()
         seconds_counter = 0;
         // l .-..
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(210); // "-"
+        delay(400); // "-"
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
-        delay(210);
+        delay(400);
         digitalWrite(4, HIGH);
-        delay(20); // "."
+        delay(50); // "."
         digitalWrite(4, LOW);
         
     }

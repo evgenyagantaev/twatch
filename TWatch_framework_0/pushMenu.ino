@@ -39,27 +39,31 @@ uint8_t push_menu()
               preferences.begin("twatch", false);
               uint32_t push_summ = preferences.getUInt("push", 0);
               int new_push = (uint32_t)(appSetNumber());
-              push_summ += new_push;
-              preferences.putUInt("push", push_summ);
-              preferences.end();
-              
-              // write in journal
-              // read current time-date
-              RTC_Date tnow = ttgo->rtc->getDateTime();
-              hh = tnow.hour;
-              mm = tnow.minute;
-              ss = tnow.second;
-              dday = tnow.day;
-              mmonth = tnow.month;
-              yyear = tnow.year;
-            
-              char message[128];
-            
-              snprintf(message, 128, "%04d.%02d.%02d %02d:%02d fit psh %d\r\n", yyear, mmonth, dday, hh, mm, new_push);
-              appendFile(SPIFFS, "/journal.txt", message);
-              //**********************************************************************
-              snprintf(diagnostics, sizeof(diagnostics), "jrnl: fit psh %d                ", new_push);
-              //**********************************************************************
+
+              if(new_push != 0)
+              {
+                  push_summ += new_push;
+                  preferences.putUInt("push", push_summ);
+                  preferences.end();
+                  
+                  // write in journal
+                  // read current time-date
+                  RTC_Date tnow = ttgo->rtc->getDateTime();
+                  hh = tnow.hour;
+                  mm = tnow.minute;
+                  ss = tnow.second;
+                  dday = tnow.day;
+                  mmonth = tnow.month;
+                  yyear = tnow.year;
+                
+                  char message[128];
+                
+                  snprintf(message, 128, "%04d.%02d.%02d %02d:%02d fit psh %d\r\n", yyear, mmonth, dday, hh, mm, new_push);
+                  appendFile(SPIFFS, "/journal.txt", message);
+                  //**********************************************************************
+                  snprintf(diagnostics, sizeof(diagnostics), "jrnl: fit psh %d                ", new_push);
+                  //**********************************************************************
+              }
           }
         }
     }

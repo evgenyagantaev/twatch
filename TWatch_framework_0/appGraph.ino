@@ -15,6 +15,14 @@ void appGraph()
     int hh, mm, yyear, mmonth, dday; // 
     int base_hh, base_mm, base_yyear, base_mmonth, base_dday; //
 
+    int state = 0;
+    // 0 - idle (black)
+    // 1 - slp  (skyblue)
+    // 2 - stp  (green)
+    // 3 - job  (yellow)
+    // 4 - wgt  (red)
+    // 5 - push/pull (orange)
+
     //*
     base_yyear = 1970;
     base_mmonth = 1;
@@ -59,6 +67,11 @@ void appGraph()
         Serial.println("- failed to open file for reading");
         return;
     }
+
+    int sleep_start = 0;
+    int step_start = 0;
+    int job_start = 0;
+    int no_redraw = 0;
 
     int base_minutes_calculated = 0;
     int base_minutes = 0;
@@ -105,12 +118,112 @@ void appGraph()
                         start_mm = mm;
                     }
                     minutes = minutes - base_minutes + start_hh *60 + start_mm;
+
+                    int norm_minutes = minutes / 6;
+
+                    if(strstr(buf, "org") != NULL)
+                    {
+                        if(strstr(buf, "slp") != NULL)
+                        {
+                            sleep_start = norm_minutes;
+                        }
+                        else if(strstr(buf, "wak") != NULL)
+                        {
+                            int l;
+                            for(l=sleep_start; l<norm_minutes; l++)
+                            {
+                                i = l / 240;
+                                j = l % 240;
+                                ttgo->tft->fillRect(i*6, j, 5, 1, TFT_SKYBLUE);
+                            }
+                        }
+                    }
+                    else if(strstr(buf, "sta") != NULL)
+                    {
+                        if((norm_minutes - no_redraw) > 3)
+                        {
+                            i = norm_minutes / 240;
+                            j = norm_minutes % 240;
+                            ttgo->tft->fillRect(i*6, j, 5, 1, TFT_GREEN);
+                            step_start = norm_minutes;
+                        }
+                        else
+                        {
+                            step_start = norm_minutes + 3;
+                        }
+
+                        // esli hodba prervala raboty
+                        if(job_start > 0)
+                        {
+                            int l;
+                            for(l=job_start; l<norm_minutes; l++)
+                            {
+                                i = l / 240;
+                                j = l % 240;
+                                ttgo->tft->fillRect(i*6, j, 5, 1, TFT_BLUE);
+                                Serial.println("JOB****************************");
+                            }
+                            job_start = 0;
+                            state = 0;  // idle state
+                        }
+                    }
+                    else if(strstr(buf, "fin") != NULL)
+                    {
+                        sprintf(buf, "%d   %d", step_start, norm_minutes);
+                        Serial.println(buf);
+                        int l;
+                        for(l=step_start; l<norm_minutes; l++)
+                        {
+                            i = l / 240;
+                            j = l % 240;
+                            ttgo->tft->fillRect(i*6, j, 5, 1, TFT_GREEN);
+                            Serial.println("STEP****************************");
+                        }
+                    }
+                    else if(strstr(buf, "wei") != NULL)
+                    {
+                        i = norm_minutes / 240;
+                        j = norm_minutes % 240;
+                        ttgo->tft->fillRect(i*6, j, 5, 3, TFT_RED);
+                        no_redraw = norm_minutes;
+                    }
+                    else if((strstr(buf, "pus") != NULL) || (strstr(buf, "pul") != NULL))
+                    {
+                        i = norm_minutes / 240;
+                        j = norm_minutes % 240;
+                        ttgo->tft->fillRect(i*6, j, 5, 3, TFT_ORANGE);
+                        no_redraw = norm_minutes;
+                    }
+
+                    if(strstr(buf, "job") != NULL)
+                    {
+                        if(state != 3) // not in job state
+                        {
+                            state = 3; // job state
+                            job_start = norm_minutes;
+                        }
+                    }
+
+                    if((strstr(buf, "idle") != NULL) && (job_start > 0))
+                    {
+                        int l;
+                        for(l=job_start; l<norm_minutes; l++)
+                        {
+                            i = l / 240;
+                            j = l % 240;
+                            ttgo->tft->fillRect(i*6, j, 5, 1, TFT_BLUE);
+                            Serial.println("JOB****************************");
+                        }
+                        job_start = 0;
+                        state = 0;  // idle state
+                    }
+                    
                     sprintf(buf, "%d.%d.%d %d:%d ---> %d\r\n", yyear, mmonth, dday, hh, mm, minutes);
                     Serial.println(buf);
-                    minutes = minutes / 6;
-                    i = minutes / 240;
-                    j = minutes % 240;
-                    ttgo->tft->fillRect(i*6, j, 5, 1, TFT_SKYBLUE);
+                    
+                    
+                    
+                    
                 }
             }
             else
