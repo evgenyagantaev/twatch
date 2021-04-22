@@ -12,12 +12,24 @@
 
 #define FORMAT_SPIFFS_IF_FAILED true
 
+#define MAX30105_ADDRESS            0x57
+#define PCF8563_ADDRESS             0x51
+#define BMA423_ADDRESS              0x19
+#define AXP202_ADDRESS              0x35
+#define FT6206_ADDRESS              0X38
+#define MPU6050_ADDRESS             0x68
+#define MPR121_ADDRESS              0x5A
+#define DRV2605_ADDRESS             0x5A
+
 char diagnostics[64];
 
 TTGOClass *ttgo;
 Preferences preferences;
 
 AXP20X_Class *power;
+
+static Adafruit_DRV2605 *drv;
+static TinyGPSPlus *gps;
 
 uint32_t targetTime = 0;       // for next 1 second display update
 
@@ -105,6 +117,13 @@ void setup()
     ttgo->openBL(); // Turn on the backlight
     display_on = true;
 
+    
+
+    //ttgo->trunOnGPS();
+    //ttgo->gps_begin();
+    //gps = ttgo->gps;
+    drv = ttgo->drv;
+
         
     ttgo->tft->setTextFont(1);
     ttgo->tft->fillScreen(TFT_BLACK);
@@ -134,6 +153,17 @@ void setup()
     Serial.print(getApbFrequency()/1000000); //Get APB clock
     Serial.println(" Mhz");
     //************************************* serial ****************************
+
+    //************************************* SD ****************************
+    if (!ttgo->sdcard_begin()) 
+    {
+        Serial.println("SD init failed");
+    } 
+    else 
+    {
+        Serial.println("SD init OK");
+    }
+    //************************************* sd ****************************
 
 
     //********************************** SPIFFS ********************************
@@ -228,7 +258,7 @@ void setup()
 
 
     //******************************** MOTOR *******************************
-    pinMode(4, OUTPUT); 
+    //pinMode(4, OUTPUT); 
     //******************************** motor *******************************
 
     //**********************************************************************
@@ -244,7 +274,7 @@ void loop()
     {
         targetTime = millis() + 1000;
         displayTime(); // 
-        zoomzoom();
+        //zoomzoom();
 
         preferences.begin("twatch", false);
         weight_factor_10 = preferences.getUInt("weight", 0);
@@ -258,9 +288,9 @@ void loop()
         if(seconds_counter >= 180)
         {
             seconds_counter = 0;
-            digitalWrite(4, HIGH);
-            delay(30);
-            digitalWrite(4, LOW);
+            //digitalWrite(4, HIGH);
+            //delay(30);
+            //digitalWrite(4, LOW);
         }
         //*******************************
 

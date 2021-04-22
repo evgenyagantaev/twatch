@@ -8,8 +8,11 @@ void appSetTime() {
   mm = tnow.minute;
   ss = tnow.second;
   dday = tnow.day;
+  //dday = 22;
   mmonth = tnow.month;
+  //mmonth = 4;
   yyear = tnow.year;
+  //yyear = 2021;
 
 //Set up the interface buttons
 
