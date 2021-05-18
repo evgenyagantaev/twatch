@@ -188,12 +188,17 @@ void appGraph()
                         j = norm_minutes % 240;
                         ttgo->tft->fillRect(i*6, j, 5, 3, TFT_RED);
                         no_redraw = norm_minutes;
+                        Serial.printf("WEIGHT ***** %d\r\n", norm_minutes);
                     }
-                    else if((strstr(buf, "pus") != NULL) || (strstr(buf, "pul") != NULL))
+                    else if((strstr(buf, "psh") != NULL) || (strstr(buf, "pul") != NULL))
                     {
+                        if((norm_minutes - no_redraw) < 3)
+                            norm_minutes += (3 - (norm_minutes - no_redraw));
+                      
                         i = norm_minutes / 240;
                         j = norm_minutes % 240;
                         ttgo->tft->fillRect(i*6, j, 5, 3, TFT_ORANGE);
+                        Serial.printf("PUSH/PULL ***** %d\r\n", norm_minutes);
                         no_redraw = norm_minutes;
                     }
 
@@ -202,7 +207,10 @@ void appGraph()
                         if(state != 3) // not in job state
                         {
                             state = 3; // job state
-                            job_start = norm_minutes;
+                            if((norm_minutes - no_redraw) >= 3)
+                                job_start = norm_minutes;
+                            else
+                                job_start = norm_minutes + (3 - (norm_minutes - no_redraw));
                         }
                     }
 
