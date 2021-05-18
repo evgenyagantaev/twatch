@@ -165,8 +165,8 @@ void appGraph()
                                 ttgo->tft->fillRect(i*6, j, 5, 1, TFT_BLUE);
                                 Serial.println("JOB****************************");
                             }
-                            job_start = 0;
-                            state = 0;  // idle state
+                            //job_start = 0;
+                            //state = 0;  // idle state
                         }
                     }
                     else if(strstr(buf, "fin") != NULL)
