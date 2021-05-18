@@ -32,7 +32,8 @@ void appWeight()
         char message[128];
     
         snprintf(message, 128, "%04d.%02d.%02d %02d:%02d wei %4.1f\r\n", yyear, mmonth, dday, hh, mm, weight);
-        appendFile(SPIFFS, "/journal.txt", message);
+        //appendFile(SPIFFS, "/journal.txt", message);
+        appendFile(SD, "/journal.txt", message);
         //**********************************************************************
         snprintf(diagnostics, sizeof(diagnostics), "jrnl: wei %4.1f                ", weight);
         //**********************************************************************

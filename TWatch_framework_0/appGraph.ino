@@ -1,5 +1,6 @@
 #include "FS.h"
-#include "SPIFFS.h"
+//#include "SPIFFS.h"
+#include <SD.h>
 
 //using namespace fs;
 
@@ -61,7 +62,8 @@ void appGraph()
     //*/
 
     //*
-    fs::File file = SPIFFS.open("/journal.txt");
+    //fs::File file = SPIFFS.open("/journal.txt");
+    fs::File file = SD.open("/journal.txt");
     if(!file || file.isDirectory())
     {
         Serial.println("- failed to open file for reading");

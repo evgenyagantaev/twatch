@@ -182,17 +182,19 @@ void setup()
         Serial.printf("SD Card Size: %lluMB\n", cardSize);
     
         listDir(SD, "/", 0);
-        createDir(SD, "/mydir");
-        listDir(SD, "/", 0);
-        removeDir(SD, "/mydir");
-        listDir(SD, "/", 2);
-        writeFile(SD, "/hello.txt", "Hello ");
-        appendFile(SD, "/hello.txt", "World!\n");
-        readFile(SD, "/hello.txt");
-        deleteFile(SD, "/foo.txt");
-        renameFile(SD, "/hello.txt", "/foo.txt");
-        readFile(SD, "/foo.txt");
-        testFileIO(SD, "/test.txt");
+        //createDir(SD, "/mydir");
+        //listDir(SD, "/", 0);
+        //removeDir(SD, "/mydir");
+        //listDir(SD, "/", 2);
+        //writeFile(SD, "/hello.txt", "Hello ");
+        //appendFile(SD, "/hello.txt", "World!\n");
+        //readFile(SD, "/hello.txt");
+        //deleteFile(SD, "/foo.txt");
+        //deleteFile(SD, "/hello.txt");
+        //deleteFile(SD, "/test.txt");
+        //renameFile(SD, "/hello.txt", "/foo.txt");
+        //readFile(SD, "/foo.txt");
+        //testFileIO(SD, "/test.txt");
         Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
         Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
     }
@@ -344,7 +346,8 @@ void loop()
             char message[128];
         
             snprintf(message, 128, "%04d.%02d.%02d %02d:%02d stp fin\r\n", yyear, mmonth, dday, hh, mm);
-            appendFile(SPIFFS, "/journal.txt", message);
+            //appendFile(SPIFFS, "/journal.txt", message);
+            appendFile(SD, "/journal.txt", message);
 
             //**********************************************************************
             snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp fin                ");
@@ -443,7 +446,8 @@ void loop()
                 char message[128];
             
                 snprintf(message, 128, "%04d.%02d.%02d %02d:%02d stp sta\r\n", yyear, mmonth, dday, hh, mm);
-                appendFile(SPIFFS, "/journal.txt", message);
+                //appendFile(SPIFFS, "/journal.txt", message);
+                appendFile(SD, "/journal.txt", message);
 
                 //**********************************************************************
                 snprintf(diagnostics, sizeof(diagnostics), "jrnl: stp sta");

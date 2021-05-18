@@ -36,7 +36,8 @@ uint8_t journal_menu()
                 if (y >= 160) // bottom selected (reset)
                 { 
                     exitMenu = true;
-                    writeFile(SPIFFS, "/journal.txt", "\r\n");
+                    //writeFile(SPIFFS, "/journal.txt", "\r\n");
+                    writeFile(SD, "/journal.txt", "\r\n");
                     
                 }
           
@@ -45,7 +46,8 @@ uint8_t journal_menu()
                 { 
                   
                     exitMenu = true;
-                    readFile(SPIFFS, "/journal.txt");
+                    //readFile(SPIFFS, "/journal.txt");
+                    readFile(SD, "/journal.txt");
                 }
             }
         }

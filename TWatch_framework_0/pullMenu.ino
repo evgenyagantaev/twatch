@@ -58,7 +58,8 @@ uint8_t pull_menu()
                   char message[128];
                 
                   snprintf(message, 128, "%04d.%02d.%02d %02d:%02d fit pul %d\r\n", yyear, mmonth, dday, hh, mm, new_pull);
-                  appendFile(SPIFFS, "/journal.txt", message);
+                  //appendFile(SPIFFS, "/journal.txt", message);
+                  appendFile(SD, "/journal.txt", message);
                   //**********************************************************************
                   snprintf(diagnostics, sizeof(diagnostics), "jrnl: fit pul %d                ", new_pull);
                   //**********************************************************************

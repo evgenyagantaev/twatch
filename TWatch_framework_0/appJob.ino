@@ -48,7 +48,8 @@ void appJob()
 
         }
         
-        appendFile(SPIFFS, "/journal.txt", message);
+        //appendFile(SPIFFS, "/journal.txt", message);
+        appendFile(SD, "/journal.txt", message);
 
     }
 
